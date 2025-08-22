@@ -545,6 +545,7 @@ GameObject:
   - component: {fileID: 538756993}
   - component: {fileID: 538756992}
   - component: {fileID: 538756991}
+  - component: {fileID: 538756994}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -603,7 +604,7 @@ Rigidbody2D:
   m_UseAutoMass: 0
   m_Mass: 1
   m_LinearDamping: 0
-  m_AngularDamping: 0.05
+  m_AngularDamping: 15
   m_GravityScale: 0.9
   m_Material: {fileID: 0}
   m_IncludeLayers:
@@ -632,6 +633,19 @@ Transform:
   - {fileID: 485931731}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &538756994
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 538756990}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0cad640d9f3994b38a1636a85b751516, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerController
+  torqueAmount: 10
 --- !u!1 &619394800
 GameObject:
   m_ObjectHideFlags: 0
