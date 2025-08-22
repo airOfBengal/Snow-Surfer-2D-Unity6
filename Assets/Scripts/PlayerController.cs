@@ -20,4 +20,18 @@ public class PlayerController : MonoBehaviour
         Vector2 moveInput = moveAction.ReadValue<Vector2>();
         rb.AddTorque(-moveInput.x * torqueAmount);
     }
+
+    void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (collision.CompareTag("FinishLine"))
+        {
+            Debug.Log("You reached the finish line!");
+        }
+
+        int layerIndex = LayerMask.NameToLayer("Floor");
+        if(collision.gameObject.layer == layerIndex)
+        {
+            Debug.Log("You hit the floor.");
+        }
+    }
 }
