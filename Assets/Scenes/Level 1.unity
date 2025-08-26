@@ -1464,6 +1464,8 @@ MonoBehaviour:
   torqueAmount: 5
   restartDelay: 1
   crashEffect: {fileID: 1864191264}
+  baseSpeed: 12
+  boostSpeed: 20
 --- !u!58 &538756995
 CircleCollider2D:
   m_ObjectHideFlags: 0
