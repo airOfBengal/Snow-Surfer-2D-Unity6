@@ -1,11 +1,13 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.SceneManagement;
 
 public class PlayerController : MonoBehaviour
 {
     private InputAction moveAction;
     private Rigidbody2D rb;
     [SerializeField] private float torqueAmount = 1f;
+    [SerializeField] private float restartDelay = 1f;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -29,9 +31,16 @@ public class PlayerController : MonoBehaviour
         }
 
         int layerIndex = LayerMask.NameToLayer("Floor");
-        if(collision.gameObject.layer == layerIndex)
+        if (collision.gameObject.layer == layerIndex)
         {
             Debug.Log("You hit the floor.");
         }
+
+        Invoke(nameof(ReloadScene), restartDelay);
+    }
+
+    void ReloadScene()
+    {
+        SceneManager.LoadScene(0);
     }
 }
