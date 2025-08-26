@@ -8,6 +8,7 @@ public class PlayerController : MonoBehaviour
     private Rigidbody2D rb;
     [SerializeField] private float torqueAmount = 1f;
     [SerializeField] private float restartDelay = 1f;
+    [SerializeField] private ParticleSystem crashEffect;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -27,13 +28,14 @@ public class PlayerController : MonoBehaviour
     {
         if (collision.CompareTag("FinishLine"))
         {
-            Debug.Log("You reached the finish line!");
+            FinishLine finishLine = collision.GetComponent<FinishLine>();
+            finishLine.PlayFinishEffect();
         }
 
         int layerIndex = LayerMask.NameToLayer("Floor");
         if (collision.gameObject.layer == layerIndex)
         {
-            Debug.Log("You hit the floor.");
+            OnCrash();
         }
 
         Invoke(nameof(ReloadScene), restartDelay);
@@ -42,5 +44,11 @@ public class PlayerController : MonoBehaviour
     void ReloadScene()
     {
         SceneManager.LoadScene(0);
+    }
+
+    void OnCrash()
+    {
+        crashEffect.gameObject.SetActive(true);
+        crashEffect.Play();
     }
 }
