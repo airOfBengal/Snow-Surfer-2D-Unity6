@@ -13,6 +13,13 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private float boostSpeed = 15f;
     private Vector2 moveInput;
     private SurfaceEffector2D surfaceEffector2D;
+    bool canControl = true;
+
+
+    // flip count
+    float previousRotation;
+    float totalRotation;
+    int flipCount = 0;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -25,8 +32,13 @@ public class PlayerController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        MovePlayer();
-        BoostPlayer();
+        if (canControl)
+        {
+            MovePlayer();
+            BoostPlayer();
+            CalculateFlips();
+        }
+
     }
 
     private void MovePlayer()
@@ -59,6 +71,7 @@ public class PlayerController : MonoBehaviour
         if (collision.gameObject.layer == layerIndex)
         {
             OnCrash();
+            canControl = false;
         }
 
         Invoke(nameof(ReloadScene), restartDelay);
@@ -73,5 +86,18 @@ public class PlayerController : MonoBehaviour
     {
         crashEffect.gameObject.SetActive(true);
         crashEffect.Play();
+    }
+
+    private void CalculateFlips()
+    {
+        float currentRotation = transform.eulerAngles.z;
+        totalRotation += Mathf.DeltaAngle(previousRotation, currentRotation);
+        if(totalRotation > 340 || totalRotation < -340)
+        {
+            flipCount++;
+            totalRotation = 0;
+            Debug.Log("Flips: " + flipCount);
+        }
+        previousRotation = currentRotation;
     }
 }
