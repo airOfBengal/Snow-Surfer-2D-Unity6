@@ -1,9 +1,12 @@
+using System;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
 
 public class PlayerController : MonoBehaviour
 {
+    public event Action<int> OnFlipAchieved;
+    public event Action<int> OnFinishAchieved;
     private InputAction moveAction;
     private Rigidbody2D rb;
     [SerializeField] private float torqueAmount = 1f;
@@ -14,7 +17,8 @@ public class PlayerController : MonoBehaviour
     private Vector2 moveInput;
     private SurfaceEffector2D surfaceEffector2D;
     bool canControl = true;
-
+    [SerializeField] private int flipScore = 100;
+    [SerializeField] private int finishScore = 500;
 
     // flip count
     float previousRotation;
@@ -65,6 +69,8 @@ public class PlayerController : MonoBehaviour
         {
             FinishLine finishLine = collision.GetComponent<FinishLine>();
             finishLine.PlayFinishEffect();
+            OnFinishAchieved?.Invoke(finishScore);
+            canControl = false;
         }
 
         int layerIndex = LayerMask.NameToLayer("Floor");
@@ -96,7 +102,7 @@ public class PlayerController : MonoBehaviour
         {
             flipCount++;
             totalRotation = 0;
-            Debug.Log("Flips: " + flipCount);
+            OnFlipAchieved?.Invoke(flipScore);
         }
         previousRotation = currentRotation;
     }
