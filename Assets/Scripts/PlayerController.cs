@@ -7,9 +7,11 @@ public class PlayerController : MonoBehaviour
 {
     public event Action<int> OnFlipAchieved;
     public event Action<int> OnFinishAchieved;
+    public event Action OnPowerupCollected;
     private InputAction moveAction;
     private Rigidbody2D rb;
     [SerializeField] private float torqueAmount = 1f;
+    [SerializeField] private float baseTorque = 1f;
     [SerializeField] private float restartDelay = 1f;
     [SerializeField] private ParticleSystem crashEffect;
     [SerializeField] private float baseSpeed = 12f;
@@ -42,7 +44,6 @@ public class PlayerController : MonoBehaviour
             BoostPlayer();
             CalculateFlips();
         }
-
     }
 
     private void MovePlayer()
@@ -80,6 +81,14 @@ public class PlayerController : MonoBehaviour
             canControl = false;
         }
 
+        layerIndex = LayerMask.NameToLayer("Collectibles");
+        if (collision.gameObject.layer == layerIndex)
+        {
+            OnPowerupCollected?.Invoke();
+            Destroy(collision.gameObject);
+            return;
+        }
+
         Invoke(nameof(ReloadScene), restartDelay);
     }
 
@@ -98,12 +107,34 @@ public class PlayerController : MonoBehaviour
     {
         float currentRotation = transform.eulerAngles.z;
         totalRotation += Mathf.DeltaAngle(previousRotation, currentRotation);
-        if(totalRotation > 340 || totalRotation < -340)
+        if (totalRotation > 340 || totalRotation < -340)
         {
             flipCount++;
             totalRotation = 0;
             OnFlipAchieved?.Invoke(flipScore);
         }
         previousRotation = currentRotation;
+    }
+
+    public void PowerupSpeed(PowerupSO speedPowerup)
+    {
+        surfaceEffector2D.speed += speedPowerup.Powerup;
+        Invoke(nameof(ResetSpeed), speedPowerup.Duration);
+    }
+
+    public void PowerupTorque(PowerupSO torquePowerup)
+    {
+        torqueAmount += torquePowerup.Powerup;
+        Invoke(nameof(ResetTorque), torquePowerup.Duration);
+    }
+
+    private void ResetSpeed()
+    {
+        surfaceEffector2D.speed = baseSpeed;
+    }
+    
+    private void ResetTorque()
+    {
+        torqueAmount = baseTorque;
     }
 }
